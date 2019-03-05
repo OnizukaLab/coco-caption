@@ -15,7 +15,7 @@ class COCOEvalCap:
         self.cocoRes = cocoRes
         self.params = {'image_id': coco.getImgIds()}
 
-    def evaluate(self):
+    def evaluate(self, metrics=""):
         imgIds = self.params['image_id']
         # imgIds = self.coco.getImgIds()
         gts = {}
@@ -29,7 +29,7 @@ class COCOEvalCap:
         # =================================================
         print('tokenization...')
         tokenizer = PTBTokenizer()
-        gts  = tokenizer.tokenize(gts)
+        gts = tokenizer.tokenize(gts)
         res = tokenizer.tokenize(res)
 
         # =================================================
@@ -48,17 +48,18 @@ class COCOEvalCap:
         # Compute scores
         # =================================================
         for scorer, method in scorers:
-            print('computing %s score...'%(scorer.method()))
-            score, scores = scorer.compute_score(gts, res)
-            if type(method) == list:
-                for sc, scs, m in zip(score, scores, method):
-                    self.setEval(sc, m)
-                    self.setImgToEvalImgs(scs, list(gts.keys()), m)
-                    print("%s: %0.3f"%(m, sc))
-            else:
-                self.setEval(score, method)
-                self.setImgToEvalImgs(scores, list(gts.keys()), method)
-                print("%s: %0.3f"%(method, score))
+            if (not metrics) or (scorer.method() in metrics):
+                print('computing %s score...' % (scorer.method()))
+                score, scores = scorer.compute_score(gts, res)
+                if type(method) == list:
+                    for sc, scs, m in zip(score, scores, method):
+                        self.setEval(sc, m)
+                        self.setImgToEvalImgs(scs, list(gts.keys()), m)
+                        print("%s: %0.3f"%(m, sc))
+                else:
+                    self.setEval(score, method)
+                    self.setImgToEvalImgs(scores, list(gts.keys()), method)
+                    print("%s: %0.3f"%(method, score))
         self.setEvalImgs()
 
     def setEval(self, score, method):
