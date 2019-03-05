@@ -10,7 +10,6 @@ import threading
 
 # Assumes meteor-1.5.jar is in the same directory as meteor.py.  Change as needed.
 METEOR_JAR = 'meteor-1.5.jar'
-# print METEOR_JAR
 
 
 class Meteor:
@@ -79,10 +78,3 @@ class Meteor:
         # score = float(meteor_p.stdout.readline().strip())
         self.lock.release()
         return score
- 
-    # def __del__(self):
-    #     self.lock.acquire()
-    #     meteor_p.stdin.close()
-    #     meteor_p.kill()
-    #     meteor_p.wait()
-        # self.lock.release()
