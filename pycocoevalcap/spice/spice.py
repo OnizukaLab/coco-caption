@@ -67,8 +67,7 @@ class Spice:
           '-subset',
           '-silent'
         ]
-        subprocess.check_call(spice_cmd, 
-            cwd=os.path.dirname(os.path.abspath(__file__)))
+        print("DEBUG", subprocess.check_call(spice_cmd, cwd=os.path.dirname(os.path.abspath(__file__))))
 
         # Read and process results
         with open(out_file.name) as data_file:    
